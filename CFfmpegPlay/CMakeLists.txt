@@ -27,6 +27,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
+set(ffmpeg_home "D:/work/ffmpeg/release builds/ffmpeg-7.0-full_build-shared")
+include_directories(${ffmpeg_home}/include)
+link_directories(${ffmpeg_home}/lib)
+file(GLOB ffmpeg_libs ${ffmpeg_home}/lib/*.lib)
+
 if(ANDROID)
   add_library(CFfmpegPlay SHARED
     main.cpp
@@ -43,4 +48,4 @@ else()
   )
 endif()
 
-target_link_libraries(CFfmpegPlay PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(CFfmpegPlay PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${ffmpeg_libs})
