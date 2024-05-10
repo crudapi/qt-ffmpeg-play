@@ -20,7 +20,7 @@ extern "C" {
 
 using namespace std;
 
-void show_dshow_device()
+char* show_dshow_device(int selectType)
 {
     qDebug() << "ffmpeg信息: " << av_version_info();
     avdevice_register_all();
@@ -42,10 +42,11 @@ void show_dshow_device()
         {
             AVDeviceInfo* devInfo = devList->devices[i];
             enum AVMediaType type = *devInfo->media_types;
-            if (type == AVMEDIA_TYPE_AUDIO)
+            if (type == selectType)
             {
                 qDebug() << devInfo->device_name;
                 qDebug() << devInfo->device_description;
+                return devInfo->device_description;
             }
             else
             {
@@ -58,12 +59,56 @@ void show_dshow_device()
     {
         qDebug() << "没有找到设备";
     }
+
+    return nullptr;
+}
+
+void capture()
+{
+    char* name = show_dshow_device(AVMEDIA_TYPE_AUDIO);
+    qDebug() << name;
+
+    AVFormatContext* m_pCaptureCtx = avformat_alloc_context();
+    int total_count = 300;
+    int captured_frame_count = 0;
+    int fps;
+    int64_t start_pts = 0;//for set start pts from 0
+
+    const AVInputFormat* inputFormat = av_find_input_format("dshow");
+    AVDictionary* dict = nullptr;
+
+    //name = "video=XiaoMi USB 2.0 Webcam";
+    //char audio[255] = "virtual-audio-capturer";
+    char audio[255] = "audio=";
+    int ret = avformat_open_input(&m_pCaptureCtx, strcat(audio, name), inputFormat, &dict);
+    if (ret != 0)
+    {
+        qDebug() << ret;
+    }
+
+    ret = avformat_find_stream_info(m_pCaptureCtx, NULL);
+    if (ret != 0)
+    {
+        qDebug() << ret;
+    }
+
+    int videoStreamId = -1;
+    videoStreamId = av_find_best_stream(m_pCaptureCtx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, NULL);
+
+    AVStream* video_stream = nullptr;
+    video_stream = m_pCaptureCtx->streams[videoStreamId];
+    //g_time_base = video_stream->time_base;
+    fps = av_q2d(video_stream->avg_frame_rate);
+    cout << "capture information:\n capture fps=" << fps << endl
+       << " w=" << video_stream->codecpar->width << ", h=" << video_stream->codecpar->height
+       << endl;
+
 }
 
 int main(int argc, char *argv[])
 {
-    show_dshow_device();
     QApplication a(argc, argv);
+    capture();
     MainWindow w;
     w.show();
     return a.exec();
