@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <iostream>
+#include "device.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -20,54 +21,10 @@ extern "C" {
 
 using namespace std;
 
-char* show_dshow_device(int selectType)
-{
-    qDebug() << "ffmpeg信息: " << av_version_info();
-    avdevice_register_all();
-    AVFormatContext* pFormatCtx = avformat_alloc_context();
-    AVDictionary* options = NULL;
-    av_dict_set(&options, "list_devices", "true", 0);
-    const AVInputFormat* iformat = av_find_input_format("dshow");
-    qDebug() << "========Enum Device Info begin=============\n";
-    avformat_open_input(&pFormatCtx, "video=dummy", iformat, &options);
-    qDebug() << "========Enum Device Info end=============\n";
-    avformat_free_context(pFormatCtx);
-
-    AVDeviceInfoList *devList = nullptr;
-    avdevice_list_input_sources(iformat, nullptr, nullptr, &devList);
-    if (devList != nullptr)
-    {
-        qDebug() << QString::number(devList->nb_devices);
-        for ( int i = 0; i < devList->nb_devices; i++)
-        {
-            AVDeviceInfo* devInfo = devList->devices[i];
-            enum AVMediaType type = *devInfo->media_types;
-            if (type == selectType)
-            {
-                qDebug() << devInfo->device_name;
-                qDebug() << devInfo->device_description;
-                return devInfo->device_description;
-            }
-            else
-            {
-                qDebug() << devInfo->device_name;
-                qDebug() << devInfo->device_description;
-            }
-        }
-    }
-    else
-    {
-        qDebug() << "没有找到设备";
-    }
-
-    return nullptr;
-}
 
 void capture()
 {
-    char* name = show_dshow_device(AVMEDIA_TYPE_AUDIO);
-    qDebug() << name;
-
+    Device device;
     AVFormatContext* m_pCaptureCtx = avformat_alloc_context();
     int total_count = 300;
     int captured_frame_count = 0;
@@ -77,10 +34,12 @@ void capture()
     const AVInputFormat* inputFormat = av_find_input_format("dshow");
     AVDictionary* dict = nullptr;
 
-    //name = "video=XiaoMi USB 2.0 Webcam";
-    //char audio[255] = "virtual-audio-capturer";
-    char audio[255] = "audio=";
-    int ret = avformat_open_input(&m_pCaptureCtx, strcat(audio, name), inputFormat, &dict);
+    device.registerAll();
+    QMap<string, string> map = device.list();
+
+    string deviceName = device.get("");
+
+    int ret = avformat_open_input(&m_pCaptureCtx, deviceName.c_str(), inputFormat, &dict);
     if (ret != 0)
     {
         qDebug() << ret;
@@ -108,7 +67,7 @@ void capture()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    capture();
+    //capture();
     MainWindow w;
     w.show();
     return a.exec();
