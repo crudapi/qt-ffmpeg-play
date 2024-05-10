@@ -8,6 +8,10 @@ Device::Device()
 
 }
 
+Device::~Device()
+{
+    qInfo() << "~Device::Device";
+}
 
 void Device::registerAll()
 {

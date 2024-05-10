@@ -15,6 +15,7 @@ class Device
 {
 public:
     Device();
+    ~Device();
     void registerAll();
     QMap<string, string> list(DeviceType deviceType = DeviceType::all);
     string get(string key);
