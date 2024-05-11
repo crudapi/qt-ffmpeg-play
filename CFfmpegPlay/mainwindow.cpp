@@ -61,7 +61,12 @@ void MainWindow::capture(string deviceName)
     int64_t start_pts = 0;//for set start pts from 0
 
     const AVInputFormat* inputFormat = av_find_input_format("dshow");
+
     AVDictionary* dict = nullptr;
+
+
+    av_dict_set(&dict, "framerate", ui->fpsEdit->text().toStdString().c_str(), 0);
+    av_dict_set(&dict, "pixel_format", ui->pixelFormatEdit->text().toStdString().c_str(), 0);//yuyv422
 
     int ret = avformat_open_input(&m_pCaptureCtx, deviceName.c_str(), inputFormat, &dict);
     if (ret != 0)
@@ -85,5 +90,5 @@ void MainWindow::capture(string deviceName)
     qDebug() << "capture information:\n capture fps=" << fps << endl
        << " w=" << video_stream->codecpar->width << ", h=" << video_stream->codecpar->height
        << endl;
-
+    qDebug() << " output pix_fmt=" << av_get_pix_fmt_name((AVPixelFormat)video_stream->codecpar->format) <<" "<< video_stream->codecpar->format << endl;
 }

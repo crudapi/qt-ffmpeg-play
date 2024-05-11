@@ -5,7 +5,7 @@
 
 Device::Device()
 {
-
+    qInfo() << "Device::Device";
 }
 
 Device::~Device()
