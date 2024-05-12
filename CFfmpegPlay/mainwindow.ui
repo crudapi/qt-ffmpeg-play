@@ -14,23 +14,73 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QComboBox" name="deviceComboBox">
+   <widget class="QWidget" name="formLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>90</x>
       <y>20</y>
-      <width>461</width>
-      <height>41</height>
+      <width>561</width>
+      <height>271</height>
      </rect>
     </property>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="videoDeviceLabel">
+       <property name="text">
+        <string>video</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="deviceComboBox"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="fpsLabel">
+       <property name="text">
+        <string>fps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="fpsEdit">
+       <property name="text">
+        <string>30</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="pixelFormatLabel">
+       <property name="text">
+        <string>pixelFormat</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="pixelFormatEdit">
+       <property name="text">
+        <string>yuyv422</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="autoDeviceLabel">
+       <property name="text">
+        <string>audio</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QListView" name="audioListView"/>
+     </item>
+    </layout>
    </widget>
    <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>250</y>
-      <width>161</width>
-      <height>51</height>
+      <x>450</x>
+      <y>330</y>
+      <width>80</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -40,66 +90,14 @@
    <widget class="QPushButton" name="stopButton">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>250</y>
-      <width>151</width>
-      <height>51</height>
+      <x>550</x>
+      <y>330</y>
+      <width>81</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
      <string>Stop</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="pixelFormatEdit">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>180</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>yuyv422</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="pixelFormatLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>150</y>
-      <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>pixelFormat</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="fpsLabel">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>150</y>
-      <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>fps</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="fpsEdit">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>180</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>30</string>
     </property>
    </widget>
   </widget>

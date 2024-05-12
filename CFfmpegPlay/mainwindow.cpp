@@ -3,6 +3,8 @@
 #include "ffmpegheader.h"
 #include "device.h"
 #include <QDebug>
+#include <QListView>
+#include <QStringListModel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,12 +24,21 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     m_device->registerAll();
-    QMap<string, string> map = m_device->list();
+    QMap<string, string> videoMap = m_device->list(DeviceType::video);
 
-    for (QMap<string, string>::const_iterator itor = map.constBegin(); itor != map.constEnd(); ++itor)
+    for (QMap<string, string>::const_iterator itor = videoMap.constBegin(); itor != videoMap.constEnd(); ++itor)
     {
         ui->deviceComboBox->addItem(itor.value().c_str(), itor.key().c_str());
     }
+
+    QMap<string, string> audioMap = m_device->list(DeviceType::audio);
+    QStringList dataList = {};
+    for (QMap<string, string>::const_iterator itor = audioMap.constBegin(); itor != audioMap.constEnd(); ++itor)
+    {
+        dataList.push_back(QString::fromStdString(itor.value()));
+    }
+    QStringListModel *model = new QStringListModel(dataList);
+    ui->audioListView->setModel(model);
 }
 
 
