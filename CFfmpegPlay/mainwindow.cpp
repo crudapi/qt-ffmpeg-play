@@ -35,7 +35,7 @@ void MainWindow::init()
     QStringList dataList = {};
     for (QMap<string, string>::const_iterator itor = audioMap.constBegin(); itor != audioMap.constEnd(); ++itor)
     {
-        dataList.push_back(QString::fromStdString(itor.value()));
+        dataList.push_back(QString::fromStdString(itor.key()));
     }
     QStringListModel *model = new QStringListModel(dataList);
     ui->audioListView->setModel(model);
@@ -81,7 +81,10 @@ void MainWindow::captureAudio()
         // 处理选中的数据
         qDebug() << selectedData;
 
-        capture(selectedData.toStdString());
+        string deviceName = m_device->get(selectedData.toStdString());
+
+        qDebug() << QString::fromStdString(deviceName);
+        capture(deviceName);
         break;
     }
 
