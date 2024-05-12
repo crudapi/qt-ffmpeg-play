@@ -19,7 +19,8 @@ public:
 private:
     void init();
     void capture(string deviceName);
-
+    void captureVideo();
+    void captureAudio();
 private slots:
     void on_startButton_clicked();
 

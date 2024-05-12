@@ -5,14 +5,14 @@
 #include <QDebug>
 #include <QListView>
 #include <QStringListModel>
-
+#include <QStandardItem>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_device(new Device())
 {
     ui->setupUi(this);
-
+    ui->audioListView->setSelectionMode(QAbstractItemView::MultiSelection);
     this->init();
 }
 
@@ -45,6 +45,19 @@ void MainWindow::init()
 void MainWindow::on_startButton_clicked()
 {
     qDebug() << "on_startButton_clicked";
+    //captureVideo();
+    captureAudio();
+}
+
+
+void MainWindow::on_stopButton_clicked()
+{
+    qDebug() << "on_stopButton_clicked";
+}
+
+void MainWindow::captureVideo()
+{
+    qDebug() << "captureVideo";
 
     QVariant data = ui->deviceComboBox->currentData();
 
@@ -58,9 +71,20 @@ void MainWindow::on_startButton_clicked()
     this->capture(deviceName);
 }
 
-void MainWindow::on_stopButton_clicked()
+void MainWindow::captureAudio()
 {
-    qDebug() << "on_stopButton_clicked";
+    qDebug() << "captureAudio";
+
+    QModelIndexList selected = ui->audioListView->selectionModel()->selectedIndexes();
+    for (const QModelIndex& index : selected) {
+        QString selectedData = index.data(Qt::DisplayRole).toString();
+        // 处理选中的数据
+        qDebug() << selectedData;
+
+        capture(selectedData.toStdString());
+        break;
+    }
+
 }
 
 void MainWindow::capture(string deviceName)
@@ -76,8 +100,8 @@ void MainWindow::capture(string deviceName)
     AVDictionary* dict = nullptr;
 
 
-    av_dict_set(&dict, "framerate", ui->fpsEdit->text().toStdString().c_str(), 0);
-    av_dict_set(&dict, "pixel_format", ui->pixelFormatEdit->text().toStdString().c_str(), 0);//yuyv422
+    //av_dict_set(&dict, "framerate", ui->fpsEdit->text().toStdString().c_str(), 0);
+    //av_dict_set(&dict, "pixel_format", ui->pixelFormatEdit->text().toStdString().c_str(), 0);//yuyv422
 
     int ret = avformat_open_input(&m_pCaptureCtx, deviceName.c_str(), inputFormat, &dict);
     if (ret != 0)
