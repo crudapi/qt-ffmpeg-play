@@ -27,7 +27,7 @@ QMap<string, string> Device::list(DeviceType deviceType)
     avdevice_list_input_sources(iFormat, nullptr, nullptr, &devList);
     if (devList != nullptr)
     {
-        qDebug() << QString::number(devList->nb_devices);
+        qDebug() << "nb_devices = " << QString::number(devList->nb_devices);
         for ( int i = 0; i < devList->nb_devices; i++)
         {
             AVDeviceInfo* devInfo = devList->devices[i];

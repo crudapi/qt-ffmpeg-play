@@ -109,7 +109,10 @@ void MainWindow::capture(string deviceName)
     int ret = avformat_open_input(&m_pCaptureCtx, deviceName.c_str(), inputFormat, &dict);
     if (ret != 0)
     {
-        qDebug() << ret;
+        qCritical() << "avformat_open_input " << QString::fromStdString(deviceName) << ret;
+    } else
+    {
+        qInfo() << "avformat_open_input " << QString::fromStdString(deviceName) << "success!";
     }
 
     ret = avformat_find_stream_info(m_pCaptureCtx, NULL);
